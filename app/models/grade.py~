@@ -1,4 +1,4 @@
-from app.constants import ModelConstants, GeneralConstants
+from app.constants import ModelConstants
 from app.extensions import db
 from app.models import BaseTable
 
@@ -46,7 +46,7 @@ class Grade(BaseTable):
 
     __table_args__ = (
         db.CheckConstraint(
-            f"score >= {GeneralConstants.Score.MIN} AND score <= {GeneralConstants.Score.MAX}",
+            "score >= 0 AND score <= 100",
             name='valid_score_range'
         ),
     )

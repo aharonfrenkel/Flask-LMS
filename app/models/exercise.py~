@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 
 import pytz
 
-from app.constants import GeneralConstants
 from app.extensions import db
 from app.models import NameMixin
 
@@ -36,7 +35,7 @@ class Exercise(NameMixin):
 
     target_date = db.Column(
         db.DateTime(timezone=True),
-        default=lambda: datetime.now(pytz.utc) + timedelta(GeneralConstants.Time.DEFAULT_EXERCISE_TARGET_DAYS)
+        default=lambda: datetime.now(pytz.utc) + timedelta()
     )
 
     is_mandatory = db.Column(

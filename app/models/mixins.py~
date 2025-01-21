@@ -1,7 +1,7 @@
 from sqlalchemy.orm import declared_attr
 
 from app import db
-from app.constants import ModelConstants
+from app.constants import StringLength
 from app.models import BaseTable
 
 
@@ -16,7 +16,7 @@ class NameMixin(BaseTable):
     __abstract__ = True
 
     name = db.Column(
-        db.String(ModelConstants.StringLength.MAX_NAME),
+        db.String(StringLength.MAX_NAME),
         nullable=False
     )
 
@@ -24,7 +24,7 @@ class NameMixin(BaseTable):
     def __table_args__(cls):
         return (
             db.CheckConstraint(
-                f"length(name) >= {ModelConstants.StringLength.MIN_NAME}",
+                f"length(name) >= {StringLength.MIN_NAME}",
                 name=f"{cls.__tablename__}name_length"
             ),
         )
@@ -49,22 +49,22 @@ class PersonMixin(BaseTable):
     )
 
     first_name = db.Column(
-        db.String(ModelConstants.StringLength.MAX_FIRST_NAME),
+        db.String(20),
         nullable=False
     )
 
     last_name = db.Column(
-        db.String(ModelConstants.StringLength.MAX_LAST_NAME),
+        db.String(20),
         nullable=False
     )
 
     phone = db.Column(
-        db.String(ModelConstants.StringLength.EQUAL_PHONE),
+        db.String(StringLength.EQUAL_PHONE),
         unique=True
     )
 
     email = db.Column(
-        db.String(ModelConstants.StringLength.MAX_EMAIL),
+        db.String(StringLength.MAX_EMAIL),
         nullable=False,
         unique=True
     )
@@ -81,15 +81,15 @@ class PersonMixin(BaseTable):
     def __table_args__(cls):
         return (
             db.CheckConstraint(
-                f"length(first_name) >= {ModelConstants.StringLength.MIN_FIRST_NAME}",
+                f"length(first_name) >= {StringLength.MIN_FIRST_NAME}",
                 name=f"{cls.__tablename__}_first_name_length"
             ),
             db.CheckConstraint(
-                f"length(last_name) >= {ModelConstants.StringLength.MIN_LAST_NAME}",
+                f"length(last_name) >= {StringLength.MIN_LAST_NAME}",
                 name=f"{cls.__tablename__}_last_name_length"
             ),
             db.CheckConstraint(
-                f"length(phone) = {ModelConstants.StringLength.EQUAL_PHONE}",
+                f"length(phone) = {StringLength.EQUAL_PHONE}",
                 name=f"{cls.__tablename__}_phone_length"
             ),
         )

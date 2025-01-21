@@ -67,14 +67,14 @@ class User(BaseTable, UserMixin):
     @property
     def is_admin(self) -> bool:
         """Check if user is an admin."""
-        return self.role == AuthConstants.Role.ADMIN
+        return self.role == "admin"
 
     @property
     def is_teacher(self) -> bool:
         """Check if user is a teacher."""
-        return self.role == AuthConstants.Role.TEACHER
+        return self.role == "teacher"
 
     @property
     def is_student(self) -> bool:
         """Check if user is a student."""
-        return self.role == AuthConstants.Role.STUDENT
+        return self.role == "student"
