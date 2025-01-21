@@ -1,5 +1,0 @@
-class AuthConstants:
-    ADMIN = "admin"
-    TEACHER = "teacher"
-    STUDENT = "student"
-    CHOICES = [ADMIN, TEACHER, STUDENT]
