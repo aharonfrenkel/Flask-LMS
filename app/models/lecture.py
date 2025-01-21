@@ -12,6 +12,7 @@ class Lecture(NameMixin):
     Each lecture belongs to a course and can have multiple exercises.
     """
 
+    # foreign keys
     course_id = db.Column(
         db.Integer,
         db.ForeignKey("course.id", ondelete="CASCADE"),
@@ -23,8 +24,10 @@ class Lecture(NameMixin):
         db.ForeignKey("teacher.id", ondelete="SET NULL")
     )
 
+    # self columns
     content = db.Column(db.Text)
 
+    # relationships
     course = db.relationship("Course", back_populates="lectures")
     teacher = db.relationship("Teacher", back_populates="lectures")
     exercises = db.relationship("Exercise", back_populates="lecture", cascade="all, delete-orphan")

@@ -18,6 +18,7 @@ class Exercise(NameMixin):
     Includes deadline management and submission tracking.
     """
 
+    # foreign keys
     lecture_id = db.Column(
         db.Integer,
         db.ForeignKey("lecture.id", ondelete="CASCADE"),
@@ -29,6 +30,7 @@ class Exercise(NameMixin):
         db.ForeignKey("teacher.id", ondelete="SET NULL")
     )
 
+    # self columns
     content = db.Column(
         db.Text,
         nullable=False
@@ -46,6 +48,7 @@ class Exercise(NameMixin):
 
     teacher_solution = db.Column(db.Text)
 
+    # relationship
     lecture = db.relationship(
         "Lecture",
         back_populates="exercises"

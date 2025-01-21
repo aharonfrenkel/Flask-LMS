@@ -14,6 +14,7 @@ class Grade(BaseTable):
     4. More flexible grading schemes
     """
 
+    # foreign keys
     solution_id = db.Column(
         db.Integer,
         db.ForeignKey("student_solution.id", ondelete="CASCADE"),
@@ -27,6 +28,7 @@ class Grade(BaseTable):
         nullable=False
     )
 
+    # self columns
     score = db.Column(
         db.Integer,
         nullable=False
@@ -34,6 +36,7 @@ class Grade(BaseTable):
 
     feedback = db.Column(db.String(ModelConstants.StringLength.MAX_FEEDBACK))
 
+    # relationships
     solution = db.relationship(
         "StudentSolution",
         back_populates="grade"

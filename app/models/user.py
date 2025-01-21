@@ -18,6 +18,7 @@ class User(BaseTable, UserMixin):
         sessions: One-to-many relationship with Session model
     """
 
+    # self columns
     email = db.Column(
         db.String(ModelConstants.StringLength.MAX_EMAIL),
         nullable=False,
@@ -35,6 +36,7 @@ class User(BaseTable, UserMixin):
         default="student"
     )
 
+    # relationships
     student = db.relationship(
         "Student",
         back_populates="user",

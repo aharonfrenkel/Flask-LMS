@@ -1,7 +1,7 @@
 from flask import Flask
 
 from config import Config
-from app.extensions import db, ma, bcrypt, login_manager, mail
+from app.extensions import db, ma, login_manager, mail
 
 
 def create_app():
@@ -12,7 +12,6 @@ def create_app():
 
     db.init_app(app)
     ma.init_app(app)
-    bcrypt.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
 

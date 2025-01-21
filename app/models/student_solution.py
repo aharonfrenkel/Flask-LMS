@@ -10,6 +10,7 @@ class StudentSolution(BaseTable):
     StudentSolution model representing a student's submission for an exercise.
     """
 
+    # foreign keys
     student_id = db.Column(
         db.Integer,
         db.ForeignKey("student.id", ondelete="CASCADE"),
@@ -22,6 +23,7 @@ class StudentSolution(BaseTable):
         nullable=False
     )
 
+    # self columns
     content = db.Column(db.Text)
 
     submitted_at = db.Column(
@@ -36,6 +38,7 @@ class StudentSolution(BaseTable):
         default=ModelConstants.DefaultValues.DEFAULT_STATUS
     )
 
+    # relationships
     student = db.relationship(
         "Student",
         back_populates="solutions"
