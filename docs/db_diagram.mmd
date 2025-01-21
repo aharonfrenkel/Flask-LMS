@@ -1,0 +1,114 @@
+erDiagram
+    User ||--o| Student : has
+    User ||--o| Teacher : has
+    User ||--o{ Session : has
+    User ||--o| Token : has
+
+    Course ||--o{ Lecture : contains
+    Course }|--o{ Student : enrolls
+    Course }|--o{ Teacher : teaches
+
+    Lecture ||--o{ Exercise : contains
+    Lecture }o--|| Teacher : taught_by
+
+    Exercise }o--|| Teacher : created_by
+    Exercise ||--o{ StudentSolution : has
+
+    Student ||--o{ StudentSolution : submits
+    StudentSolution ||--o| Grade : receives
+
+    Teacher ||--o{ Grade : grades
+
+    User {
+        int id PK
+        string email "unique"
+        string password
+        enum role "admin/teacher/student"
+        datetime created_at
+    }
+
+    Student {
+        int id PK
+        int user_id FK "unique"
+        string first_name
+        string last_name
+        string phone "unique"
+        string email "unique"
+        datetime created_at
+    }
+
+    Teacher {
+        int id PK
+        int user_id FK "unique"
+        string first_name
+        string last_name
+        string phone "unique"
+        string email "unique"
+        datetime created_at
+    }
+
+    Course {
+        int id PK
+        string name "unique"
+        datetime created_at
+    }
+
+    Lecture {
+        int id PK
+        int course_id FK
+        int teacher_id FK "nullable"
+        string name
+        text content "nullable"
+        datetime created_at
+    }
+
+    Exercise {
+        int id PK
+        int lecture_id FK
+        int teacher_id FK "nullable"
+        string name
+        text content
+        datetime target_date
+        boolean is_mandatory "default true"
+        text teacher_solution "nullable"
+        datetime created_at
+    }
+
+    StudentSolution {
+        int id PK
+        int student_id FK
+        int exercise_id FK
+        text solution
+        datetime submitted_at
+        string status
+        datetime created_at
+    }
+
+    Grade {
+        int id PK
+        int solution_id FK "unique"
+        int teacher_id FK
+        int score "0-100"
+        string feedback "nullable"
+        datetime created_at
+    }
+
+    Session {
+        int id PK
+        int user_id FK
+        datetime login_time
+        datetime logout_time "nullable"
+        datetime last_activity
+        string ip_address "nullable"
+        string user_agent "nullable"
+        datetime created_at
+    }
+
+    Token {
+        int id PK
+        int user_id FK "unique"
+        string token "unique"
+        boolean is_used
+        datetime expiration
+        datetime created_at
+    }
