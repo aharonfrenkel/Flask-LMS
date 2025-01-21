@@ -6,9 +6,10 @@ These tables manage the relationships between:
 """
 
 from app.extensions import db
+from app.models import BaseTable
 
 
-class StudentCourses(db.Model):
+class StudentCourses(BaseTable):
     """Association table connecting students with their courses."""
 
     student_id = db.Column(
@@ -24,7 +25,7 @@ class StudentCourses(db.Model):
     )
 
 
-class TeacherCourses(db.Model):
+class TeacherCourses(BaseTable):
     """Association table connecting teachers with their courses."""
 
     teacher_id = db.Column(
