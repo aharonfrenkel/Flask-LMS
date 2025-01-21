@@ -15,6 +15,9 @@ class ModelConstants:
         MAX_PASSWORD = 80
         MAX_FEEDBACK = 255
         MAX_STATUS = 20
+        MAX_TOKEN = 128
+        MAX_IP_ADDRESS = 45
+        MAX_USER_AGENT = 255
 
 
     class DefaultValues:
