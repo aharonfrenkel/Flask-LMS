@@ -1,3 +1,10 @@
+"""
+This module defines the many-to-many association tables for the application.
+These tables manage the relationships between:
+- Students and their courses
+- Teachers and their courses
+"""
+
 from app.extensions import db
 
 
