@@ -1,4 +1,5 @@
 from marshmallow import Schema, fields, validate
+
 from app.constants import ModelConstants, ValidationConstants
 
 
@@ -6,7 +7,16 @@ class BaseSchema(Schema):
     """Base schema with common fields."""
 
     id = fields.Int(dump_only=True)
-    created_at = fields.DateTime(dump_only=True)
+    data = fields.Method("get_data", dump_only=True)
+    time = fields.Method("get_time", dump_only=True)
+
+    def get_data(self, obj):
+        return obj.created_at.strftime("%d-%m-%Y")
+
+    def get_time(self, obj):
+        return obj.created_at.strftime("%H:%M:%S")
+
+    created_at = fields.DateTime(dump_only=True, format="%d-%m-%Y %H:%M:%S")
 
 
 class NameSchema(BaseSchema):
@@ -50,6 +60,7 @@ class PersonSchema(BaseSchema):
     )
 
     phone = fields.Str(
+        required=True,
         validate=validate.Regexp(
             ValidationConstants.Phone.PATTERN,
             error=ValidationConstants.Phone.ERROR_MESSAGES['pattern']
