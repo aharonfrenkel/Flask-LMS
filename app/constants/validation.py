@@ -34,3 +34,8 @@ class ValidationConstants:
         ERROR_MESSAGES = {
             'range': 'Score must be between 0 and 100'
         }
+
+    class Feedback:
+        ERROR_MESSAGES = {
+            'length': 'Feedback length must be between 1 and 255 characters'
+        }
