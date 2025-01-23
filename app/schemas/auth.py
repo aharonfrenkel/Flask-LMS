@@ -146,12 +146,3 @@ class UserAdminSchema(ma.SQLAlchemyAutoSchema, BaseSchema):
 
     student = fields.Nested('StudentSchema', dump_only=True)
     teacher = fields.Nested('TeacherSchema', dump_only=True)
-
-
-user_register_schema = UserRegisterSchema()
-user_login_schema = UserLoginSchema()
-user_forget_password_schema = UserForgetPasswordSchema()
-user_reset_password_schema = UserResetPasswordSchema()
-user_change_password_schema = UserChangePasswordSchema()
-user_admin_schema = UserAdminSchema()
-users_admin_schema = UserAdminSchema(many=True)

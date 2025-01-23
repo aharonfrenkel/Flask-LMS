@@ -1,8 +1,17 @@
 from .base import BaseSchema, NameSchema, PersonSchema
+
 from .auth import (
-    user_register_schema,
-    user_login_schema,
-    user_forget_password_schema,
-    user_reset_password_schema,
-    user_change_password_schema
+    UserRegisterSchema,
+    UserLoginSchema,
+    UserForgetPasswordSchema,
+    UserResetPasswordSchema,
+    UserChangePasswordSchema,
+    UserAdminSchema
 )
+from .course import CourseSchema
+from .exercise import ExerciseSchema
+from .grade import GradeSchema
+from .lecture import LectureSchema
+from .student import StudentSchema
+from .student_solution import StudentSolutionSchema
+from .teacher import TeacherSchema
