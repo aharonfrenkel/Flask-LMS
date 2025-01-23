@@ -18,6 +18,12 @@ class StudentSchema(PersonSchema, ma.SQLAlchemyAutoSchema):
         only=('name',)
     )
 
+    solutions = fields.Nested(
+        'StudentSolutionSchema',
+        many=True,
+        dump_only=True
+    )
+
     courses_count = fields.Function(
         lambda obj: len(obj.courses),
         dump_only=True
