@@ -12,7 +12,6 @@ class SessionSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Session
         load_instance = True
-        exclude = ('date', 'time')
 
     user_id = fields.Int(
         required=True,
@@ -54,9 +53,7 @@ class SessionSchema(ma.SQLAlchemyAutoSchema):
         dump_only=True
     )
 
-    ip_address = fields.IP(
-        validate=validate.Length(max=ModelConstants.StringLength.MAX_IP_ADDRESS)
-    )
+    ip_address = fields.IP()
 
     user_agent = fields.Str(
         validate=validate.Length(max=ModelConstants.StringLength.MAX_USER_AGENT)
