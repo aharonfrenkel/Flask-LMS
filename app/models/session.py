@@ -52,22 +52,13 @@ class Session(BaseTable):
 
     user = db.relationship("User", back_populates="sessions")
 
-    def __init__(self, user_id: int, ip_address: str, user_agent: str) -> None:
-        self.user_id = user_id
-        self.ip_address = ip_address
-        self.user_agent = user_agent
-        self.last_activity = datetime.now(pytz.utc)
-
-    def is_session_expired(self,
-            max_lifetime: timedelta = timedelta(weeks=GeneralConstants.Time.DEFAULT_SESSION_LIFETIME_WEEKS)
-    ) -> bool:
+    @property
+    def is_expired(self) -> bool:
+        """Check if session has expired based on last activity."""
+        max_lifetime = timedelta(weeks=GeneralConstants.Time.DEFAULT_SESSION_LIFETIME_WEEKS)
         current_time = datetime.now(pytz.utc)
-        if self.last_activity.tzinfo is None:
-            activity_time = pytz.utc.localize(self.last_activity)
-        else:
-            activity_time = self.last_activity
 
-        return current_time - activity_time > max_lifetime
+        return current_time - self.last_activity > max_lifetime
 
     def update_activity(self) -> None:
         self.last_activity = func.current_timestamp()

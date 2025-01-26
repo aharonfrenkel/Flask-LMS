@@ -9,3 +9,4 @@ from .exercise import Exercise
 from .student_solution import StudentSolution
 from .grade import Grade
 from .associations import StudentCourses, TeacherCourses
+from .session import Session
