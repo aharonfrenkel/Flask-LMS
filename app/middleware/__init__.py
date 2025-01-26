@@ -1,1 +1,2 @@
+from .exception_handler import handle_exceptions
 from .validate_request import validate_json_request
