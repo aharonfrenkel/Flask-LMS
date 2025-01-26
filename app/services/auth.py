@@ -1,6 +1,9 @@
-from app.factories import crud_service, user_register_schema
+from flask_login import login_user
+from werkzeug.exceptions import Unauthorized
+
+from app.factories import crud_service, user_register_schema, session_service
 from app.models import User
-from app.utils import hash_password
+from app.utils import hash_password, verify_password
 
 
 class AuthService:
@@ -43,3 +46,34 @@ class AuthService:
         user_data = data.copy()
         user_data['password'] = hash_password(data['password'])
         return user_data
+
+
+    # Login service
+    def login_user(self, data: dict) -> User:
+        """
+        Authenticate user and create session.
+
+        Args:
+            data: Dict with 'email', 'password' and optional 'remember' flag
+
+        Raises:
+            Unauthorized: For any authentication failure, with generic message
+            to prevent user enumeration attacks.
+        """
+        user = self._authenticate_user(data)
+        session_service.create_session(user)
+        login_user(user, remember=data.get('remember', False))
+        return user
+
+    def _authenticate_user(self, data: dict) -> User:
+        user = crud_service.find_one_by_fields_or_raise(
+            model=User,
+            exception=Unauthorized,
+            error_msg="Invalid email or password",
+            email=data['email']
+        )
+
+        if not verify_password(user.password, data['password']):
+            raise Unauthorized("Invalid email or password")
+
+        return user
