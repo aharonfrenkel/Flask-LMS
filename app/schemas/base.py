@@ -1,20 +1,15 @@
 from marshmallow import Schema, fields, validate
 
 from app.constants import ModelConstants, ValidationConstants
+from app.utils import format_date, format_time
 
 
 class BaseSchema(Schema):
     """Base schema with common fields."""
 
     id = fields.Int(dump_only=True)
-    date = fields.Method("get_date", dump_only=True)
-    time = fields.Method("get_time", dump_only=True)
-
-    def get_date(self, obj):
-        return obj.created_at.strftime("%d-%m-%Y")
-
-    def get_time(self, obj):
-        return obj.created_at.strftime("%H:%M:%S")
+    date = fields.Function(lambda obj: format_date(obj.created_at), dump_only=True)
+    time = fields.Function(lambda obj: format_time(obj.created_at), dump_only=True)
 
 
 class NameSchema(BaseSchema):
