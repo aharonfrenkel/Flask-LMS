@@ -12,6 +12,7 @@ from .course import CourseSchema
 from .exercise import ExerciseSchema
 from .grade import GradeSchema
 from .lecture import LectureSchema
+from .session import SessionSchema
 from .student import StudentSchema
 from .student_solution import StudentSolutionSchema
 from .teacher import TeacherSchema
