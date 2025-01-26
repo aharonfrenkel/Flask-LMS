@@ -1,2 +1,2 @@
 from .naming import camelcase_to_snakecase
-from .security import hash_password
+from .security import hash_password, verify_password
