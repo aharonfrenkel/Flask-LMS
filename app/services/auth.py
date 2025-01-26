@@ -1,6 +1,5 @@
-from app.factories import user_register_schema
+from app.factories import crud_service, user_register_schema
 from app.models import User
-from app.factories import crud_service
 from app.utils import hash_password
 
 
@@ -18,7 +17,17 @@ class AuthService:
         * Change Password: Update passwords for logged-in users
     """
 
+    # Registration service
     def register_user(self, data: dict) -> User:
+        """
+        Register a new user account.
+
+        Args:
+            data: Dict with 'email', 'password' and optional 'role'
+
+        Raises:
+            Conflict: If email already exists
+        """
         self._validate_email_not_taken(data['email'])
         user_data = self._prepare_user_data(data)
         return crud_service.create(user_data, user_register_schema)
