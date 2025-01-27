@@ -1,4 +1,5 @@
 from flask import Blueprint, Response
+from flask_login import login_required
 
 from app.factories import auth_service, user_login_schema
 from app.middleware import validate_json_request, handle_exceptions, logout_required
@@ -22,3 +23,12 @@ def login(data: dict) -> Response:
     }
 
     return success_response("Login successful", data=user_data)
+
+
+@auth_bp.post('/logout')
+@handle_exceptions
+@login_required
+def logout() -> Response:
+    auth_service.logout_user()
+
+    return success_response("Logout successful")

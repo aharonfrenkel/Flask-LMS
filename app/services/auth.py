@@ -1,4 +1,4 @@
-from flask_login import login_user
+from flask_login import login_user, logout_user
 from werkzeug.exceptions import Unauthorized
 
 from app.models import User
@@ -87,3 +87,9 @@ class AuthService:
             raise Unauthorized("Invalid email or password")
 
         return user
+
+
+    # Logout service
+    def logout_user(self) -> None:
+        """End user's authenticated session using Flask-Login."""
+        logout_user()
