@@ -15,7 +15,8 @@ class User(BaseTable, UserMixin):
         role: User's role (admin, teacher, or student)
         student: One-to-one relationship with Student model
         teacher: One-to-one relationship with Teacher model
-        sessions: One-to-many relationship with Session model
+        login_records: One-to-many relationship with LoginRecord model
+        token: One-to-one relationship with Token model (for password reset)
     """
 
     # self columns
@@ -49,8 +50,8 @@ class User(BaseTable, UserMixin):
         uselist=False
     )
 
-    sessions = db.relationship(
-        "Session",
+    login_records = db.relationship(
+        "LoginRecord",
         back_populates="user",
         cascade="all, delete-orphan"
     )
@@ -58,7 +59,7 @@ class User(BaseTable, UserMixin):
     token = db.relationship(
         "Token",
         back_populates="user",
-        cascade = "all, delete-orphan",
+        cascade="all, delete-orphan",
         uselist=False
     )
 

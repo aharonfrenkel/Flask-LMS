@@ -1,6 +1,7 @@
-from app.schemas import UserRegisterSchema, SessionSchema
+from app.schemas import LoginRecordSchema, UserRegisterSchema
 
 
 user_register_schema = UserRegisterSchema()
+user_login_schema = UserRegisterSchema()
 
-create_session_schema = SessionSchema(only=('user_id', 'ip_address', 'user_agent'))
+create_login_record_schema = LoginRecordSchema(only=('user_id', 'ip_address', 'user_agent'))

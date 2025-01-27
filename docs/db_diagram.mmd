@@ -1,7 +1,7 @@
 erDiagram
     User ||--o| Student : has
     User ||--o| Teacher : has
-    User ||--o{ Session : has
+    User ||--o{ LoginRecord : has
     User ||--o| Token : has
 
     Course ||--o{ Lecture : contains
@@ -93,12 +93,10 @@ erDiagram
         datetime created_at
     }
 
-    Session {
+    LoginRecord {
         int id PK
         int user_id FK
-        datetime login_time
-        datetime logout_time "nullable"
-        datetime last_activity
+        datetime login_timestamp
         string ip_address "nullable"
         string user_agent "nullable"
         datetime created_at

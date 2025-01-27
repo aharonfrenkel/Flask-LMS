@@ -1,6 +1,6 @@
-from app.services import CRUDService, DatabaseService, AuthService, SessionService
+from app.services import CRUDService, DatabaseService, AuthService, LoginRecordService
 
-crud_service = CRUDService()
 db_service = DatabaseService()
+crud_service = CRUDService()
 auth_service = AuthService()
-session_service = SessionService()
+login_record_service = LoginRecordService()

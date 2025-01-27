@@ -1,7 +1,7 @@
 from flask_login import login_user
 from werkzeug.exceptions import Unauthorized
 
-from app.factories import crud_service, user_register_schema, session_service
+from app.factories import crud_service, user_register_schema, login_record_service
 from app.models import User
 from app.utils import hash_password, verify_password
 
@@ -12,8 +12,8 @@ class AuthService:
 
     Handles user authentication operations:
     - Registration: Create new user accounts with validation
-    - Login: Authenticate users and manage sessions
-    - Logout: End user sessions securely
+    - Login: Authenticate users and record login events
+    - Logout: End user authentication session via Flask-Login
     - Password Management:
         * Forgot Password: Send reset tokens via email
         * Reset Password: Process password reset requests
@@ -51,7 +51,7 @@ class AuthService:
     # Login service
     def login_user(self, data: dict) -> User:
         """
-        Authenticate user and create session.
+        Authenticate user and create login record.
 
         Args:
             data: Dict with 'email', 'password' and optional 'remember' flag
@@ -61,7 +61,7 @@ class AuthService:
             to prevent user enumeration attacks.
         """
         user = self._authenticate_user(data)
-        session_service.create_session(user)
+        login_record_service.create_session(user)
         login_user(user, remember=data.get('remember', False))
         return user
 
