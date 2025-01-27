@@ -4,7 +4,7 @@ from marshmallow import Schema
 from werkzeug.exceptions import NotFound, Conflict
 
 from app import db
-from app.factories import db_service
+from app.services import DatabaseService
 
 T = TypeVar('T')
 
@@ -14,6 +14,8 @@ class CRUDService:
     Base service for CRUD operations.
     Provides generic functionality for reading, creating, updating and deleting records.
     """
+    def __init__(self, db_service: DatabaseService) -> None:
+        self._db_service = db_service
 
     # Read operations
     def find_one_by_fields(self, model: Type[T], **filters) -> Optional[T]:
@@ -49,5 +51,5 @@ class CRUDService:
     def create(self, data: dict, schema: Schema) -> T:
         new_item = schema.load(data)
         db.session.add(new_item)
-        db_service.commit()
+        self._db_service.commit()
         return new_item
