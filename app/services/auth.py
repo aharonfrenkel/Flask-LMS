@@ -3,7 +3,10 @@ from werkzeug.exceptions import Unauthorized
 
 from app.models import User
 from app.schemas import UserRegisterSchema
-from app.services import CRUDService, LoginRecordService
+from app.services.crud import CRUDService
+from app.services.login_record import LoginRecordService
+from app.services.token import TokenService
+from app.services.email import EmailService
 from app.utils import hash_password, verify_password
 
 
@@ -24,11 +27,15 @@ class AuthService:
             self,
             crud_service: CRUDService,
             login_record_service: LoginRecordService,
-            user_register_schema: UserRegisterSchema
+            user_register_schema: UserRegisterSchema,
+            token_service: TokenService,
+            email_service: EmailService
     ) -> None:
         self._crud_service = crud_service
         self._login_record_service = login_record_service
         self._user_register_schema = user_register_schema
+        self._token_service = token_service
+        self._email_service = email_service
 
     # Registration service
     def register_user(self, data: dict) -> User:
@@ -93,3 +100,28 @@ class AuthService:
     def logout_user(self) -> None:
         """End user's authenticated session using Flask-Login."""
         logout_user()
+
+
+    # Forgot password service
+    def forgot_password(self, data: dict) -> None:
+        """
+        Send password reset token to user's email address.
+
+        Args:
+            data: Dict with 'email'
+        Note:
+            Does not raise exceptions for non-existent emails
+            as part of security measures against user enumeration.
+            Always processes silently regardless of email existence.
+        """
+        user = self._find_user_by_email(data['email'])
+
+        if user:
+            reseet_token = self._token_service.create_password_reset_token(user)
+            self._email_service.send_password_reset_email(user.email, reseet_token)
+
+    def _find_user_by_email(self, email: str) -> User:
+        return self._crud_service.find_one_by_fields(
+            model=User,
+            email=email
+        )

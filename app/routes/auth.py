@@ -1,7 +1,7 @@
 from flask import Blueprint, Response
 from flask_login import login_required
 
-from app.factories import auth_service, user_login_schema
+from app.factories import auth_service, user_login_schema, user_forgot_password_schema
 from app.middleware import validate_json_request, handle_exceptions, logout_required
 from app.utils import success_response
 
@@ -32,3 +32,13 @@ def logout() -> Response:
     auth_service.logout_user()
 
     return success_response("Logout successful")
+
+
+@auth_bp.post('/password/forgot')
+@handle_exceptions
+@logout_required
+@validate_json_request(user_forgot_password_schema)
+def forgot_password(data: dict) -> Response:
+    auth_service.forgot_password(data)
+
+    return success_response("Reset password sent. Check your email.")
