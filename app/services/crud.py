@@ -47,9 +47,19 @@ class CRUDService:
         if item:
             raise exception(error_msg)
 
+    def find_one_by_advanced_filters(self, model: Type[T], *filters) -> Optional[T]:
+        return model.query.filter(*filters).first()
+
     # Create operations
     def create(self, data: dict, schema: Schema) -> T:
         new_item = schema.load(data)
         db.session.add(new_item)
         self._db_service.commit()
         return new_item
+
+    # Update operations
+    def update(self, obj: T, data: dict) -> None:
+        for key, value in data.items():
+            if hasattr(obj, key):
+                setattr(obj, key, value)
+        self._db_service.commit()
