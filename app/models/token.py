@@ -14,15 +14,17 @@ class Token(BaseTable):
     Attributes:
         user_id: Foreign key to User model
         token: Hashed reset token
-        is_used: Whether token has been used
         expiration: When token expires
+        status: Token state (active/used/invalidated) - Controls token lifecycle:
+                - active: Token is valid and can be used for password reset
+                - used: Token has been successfully used for password reset
+                - invalidated: Token was cancelled (e.g., due to new token creation)
     """
 
     user_id = db.Column(
         db.Integer,
         db.ForeignKey("user.id", ondelete="CASCADE"),
-        nullable=False,
-        unique=True
+        nullable=False
     )
 
     token = db.Column(
@@ -31,20 +33,16 @@ class Token(BaseTable):
         unique=True
     )
 
-    is_used = db.Column(
-        db.Boolean,
-        nullable=False,
-        default=False
-    )
-
     expiration = db.Column(
         db.DateTime(timezone=True),
         nullable=False,
         default=lambda: datetime.now(pytz.utc) + timedelta(hours=GeneralConstants.Time.DEFAULT_TOKEN_EXPIRATION_HOURS)
     )
 
-    user = db.relationship("User", back_populates="token")
+    status = db.Column(
+        db.Enum(*ModelConstants.TokenStatus.CHOICES),
+        nullable=False,
+        default=ModelConstants.TokenStatus.ACTIVE
+    )
 
-    def __init__(self, user_id: int, token: str):
-        self.user_id = user_id
-        self.token = token
+    user = db.relationship("User", back_populates="tokens")

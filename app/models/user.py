@@ -16,7 +16,7 @@ class User(BaseTable, UserMixin):
         student: One-to-one relationship with Student model
         teacher: One-to-one relationship with Teacher model
         login_records: One-to-many relationship with LoginRecord model
-        token: One-to-one relationship with Token model (for password reset)
+        tokens: One-to-many relationship with Token model (for password reset history)
     """
 
     # self columns
@@ -56,11 +56,10 @@ class User(BaseTable, UserMixin):
         cascade="all, delete-orphan"
     )
 
-    token = db.relationship(
+    tokens = db.relationship(
         "Token",
         back_populates="user",
-        cascade="all, delete-orphan",
-        uselist=False
+        cascade="all, delete-orphan"
     )
 
     def get_id(self) -> str:

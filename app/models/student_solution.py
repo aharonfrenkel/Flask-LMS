@@ -33,7 +33,7 @@ class StudentSolution(BaseTable):
     )
 
     status = db.Column(
-        db.String(ModelConstants.StringLength.MAX_STATUS),
+        db.Enum(*GeneralConstants.Status.CHOICES),
         nullable=False,
         default=ModelConstants.DefaultValues.DEFAULT_STATUS
     )
@@ -57,9 +57,5 @@ class StudentSolution(BaseTable):
     )
 
     __table_args__ = (
-        db.CheckConstraint(
-            f"status IN {GeneralConstants.Status.CHOICES}",
-            name="valid_status"
-        ),
         db.UniqueConstraint("student_id", "exercise_id", name="unique_student_exercise"),
     )

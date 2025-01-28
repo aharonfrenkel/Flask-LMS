@@ -2,7 +2,7 @@ erDiagram
     User ||--o| Student : has
     User ||--o| Teacher : has
     User ||--o{ LoginRecord : has
-    User ||--o| Token : has
+    User ||--o{ Token : has
 
     Course ||--o{ Lecture : contains
     Course }|--o{ Student : enrolls
@@ -104,9 +104,9 @@ erDiagram
 
     Token {
         int id PK
-        int user_id FK "unique"
+        int user_id FK
         string token "unique"
-        boolean is_used
         datetime expiration
+        enum status "active/used/invalidated"
         datetime created_at
     }
