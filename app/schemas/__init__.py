@@ -13,6 +13,7 @@ from .exercise import ExerciseSchema
 from .grade import GradeSchema
 from .lecture import LectureSchema
 from .login_record import LoginRecordSchema
+from .token import TokenSchema
 from .student import StudentSchema
 from .student_solution import StudentSolutionSchema
 from .teacher import TeacherSchema
