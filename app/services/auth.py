@@ -3,6 +3,7 @@ from werkzeug.exceptions import Unauthorized
 
 from app.models import User
 from app.schemas import UserRegisterSchema
+from app.services import DatabaseService
 from app.services.crud import CRUDService
 from app.services.login_record import LoginRecordService
 from app.services.token import TokenService
@@ -25,12 +26,14 @@ class AuthService:
     """
     def __init__(
             self,
+            db_service: DatabaseService,
             crud_service: CRUDService,
             login_record_service: LoginRecordService,
             user_register_schema: UserRegisterSchema,
             token_service: TokenService,
             email_service: EmailService
     ) -> None:
+        self._db_service = db_service
         self._crud_service = crud_service
         self._login_record_service = login_record_service
         self._user_register_schema = user_register_schema
