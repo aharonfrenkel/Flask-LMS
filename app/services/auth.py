@@ -1,6 +1,7 @@
 from flask_login import login_user, logout_user
 from werkzeug.exceptions import Unauthorized
 
+from app.constants import ValidationConstants
 from app.models import User
 from app.schemas import UserRegisterSchema
 from app.services import DatabaseService
@@ -121,10 +122,40 @@ class AuthService:
 
         if user:
             reseet_token = self._token_service.create_password_reset_token(user)
-            self._email_service.send_password_reset_email(user.email, reseet_token)
+            self._email_service.send_password_reset_token(user.email, reseet_token)
 
     def _find_user_by_email(self, email: str) -> User:
         return self._crud_service.find_one_by_fields(
             model=User,
             email=email
         )
+
+
+    # Reset password service
+    def reset_password(self, data: dict) -> None:
+        """
+        Reset user's password using a valid reset token.
+
+        Args:
+            data: Dict with 'email', 'token', and 'new_password'
+
+        Raises:
+            Unauthorized: For any validation failure, with generic message
+            to prevent user enumeration attacks.
+        """
+        user = self._find_user_by_email_or_raise(data['email'])
+        with self._db_service.transaction():
+            self._token_service.mark_token_as_used(user, data['token'])
+            self._update_user_password(user, data['new_password'])
+        self._email_service.send_password_reset_confirmation(user.email)
+
+    def _find_user_by_email_or_raise(self, email: str) -> User:
+        return self._crud_service.find_one_by_fields_or_raise(
+            model=User,
+            exception=Unauthorized,
+            error_msg=ValidationConstants.ResetPassword.ERROR_MESSAGES['general_error'],
+            email=email
+        )
+
+    def _update_user_password(self, user: User, password: str) -> None:
+        self._crud_service.update(user, {'password': hash_password(password)})
