@@ -16,7 +16,7 @@ class ModelConstants:
         MAX_FEEDBACK = 255
         MAX_STATUS = 20
         MAX_TOKEN = 128
-        TOKEN_ENTROPY_BYTES = 32
+        TOKEN_ENTROPY_BYTES = 8
         MAX_IP_ADDRESS = 45
         MAX_USER_AGENT = 255
 
