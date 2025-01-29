@@ -44,7 +44,7 @@ class EmailService:
         )
         mail.send(msg)
 
-    def send_password_reset_email(self, email: str, token: str) -> None:
+    def send_password_reset_token(self, email: str, token: str) -> None:
         """
         Send password reset email with token.
 
@@ -70,6 +70,27 @@ class EmailService:
         This code will expire in {GeneralConstants.Time.DEFAULT_TOKEN_EXPIRATION_HOURS} hour.
 
         If you did not request this password reset, please ignore this email, and ensure your account is secure.
+        """
+
+        self.send_email(
+            subject=subject,
+            body=body,
+            to=email
+        )
+
+    def send_password_reset_confirmation(self, email: str) -> None:
+        """
+        Send password reset confirmation email.
+
+        Args:
+            email: Recipient's email address
+        """
+        subject = "Password Reset Confirmation"
+
+        body = f"""
+        Your password has been successfully reset.
+
+        If you did not request this password reset, please contact the support manager as soon as possible.
         """
 
         self.send_email(
