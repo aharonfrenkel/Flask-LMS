@@ -39,3 +39,10 @@ class ValidationConstants:
         ERROR_MESSAGES = {
             'length': 'Feedback length must be between 1 and 255 characters'
         }
+
+    class ResetPassword:
+        ERROR_MESSAGES = {
+            'general_error': """The password reset request cannot be completed. 
+            Please verify your email address and reset code, 
+            or request a new password reset if needed."""
+        }
