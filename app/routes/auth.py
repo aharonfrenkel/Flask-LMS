@@ -1,7 +1,13 @@
 from flask import Blueprint, Response
 from flask_login import login_required
 
-from app.factories import auth_service, user_login_schema, user_forgot_password_schema, user_reset_password_schema
+from app.factories import (
+    auth_service,
+    user_login_schema,
+    user_forgot_password_schema,
+    user_reset_password_schema,
+    user_change_password_schema
+)
 from app.middleware import validate_json_request, handle_exceptions, logout_required
 from app.utils import success_response
 
@@ -52,3 +58,13 @@ def reset_password(data: dict) -> Response:
     auth_service.reset_password(data)
 
     return success_response("Password reset successful")
+
+
+@auth_bp.post('/password/update')
+@handle_exceptions
+@login_required
+@validate_json_request(user_change_password_schema)
+def update_password(data: dict) -> Response:
+    auth_service.update_password(data)
+
+    return success_response("Password updated successful")
