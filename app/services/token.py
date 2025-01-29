@@ -2,12 +2,13 @@ from datetime import datetime
 from typing import Optional
 
 import pytz
+from werkzeug.exceptions import Unauthorized
 
-from app.constants import ModelConstants
+from app.constants import ModelConstants, ValidationConstants
 from app.models import User, Token
 from app.schemas import TokenSchema
 from app.services import CRUDService
-from app.utils import generate_token, hash_password
+from app.utils import generate_token, hash_password, verify_password
 
 
 class TokenService:
@@ -49,7 +50,28 @@ class TokenService:
     def _invalidate_existing_token(self, user: User) -> None:
         existing_token = self._find_active_token(user)
         if existing_token:
-            self._invalidate_token(existing_token)
+            self._update_token_status(existing_token, ModelConstants.TokenStatus.INVALIDATED)
+
+    def _prepare_token_data(self, user: User, token: str) -> dict:
+        return {
+            'user_id': user.id,
+            'token': hash_password(token)
+        }
+
+    def mark_token_as_used(self, user: User, raw_token: str) -> None:
+        """
+        Marks a password reset token as used after validating it.
+
+        Args:
+            user: The user who owns the token
+            raw_token: The token to be marked as used
+        Raises:
+            Unauthorized: If token validation fails (invalid, expired, or already used)
+        """
+        active_token = self._find_active_token(user)
+        if not active_token or not verify_password(active_token.token, raw_token):
+            raise Unauthorized(ValidationConstants.ResetPassword.ERROR_MESSAGES['general_error'])
+        self._update_token_status(active_token, ModelConstants.TokenStatus.USED)
 
     def _find_active_token(self, user: User) -> Optional[Token]:
         return self._crud_service.find_one_by_advanced_filters(
@@ -59,11 +81,5 @@ class TokenService:
             Token.expiration > datetime.now(pytz.utc)
         )
 
-    def _invalidate_token(self, token: Token) -> None:
-        self._crud_service.update(token, {'status': ModelConstants.TokenStatus.INVALIDATED})
-
-    def _prepare_token_data(self, user: User, token: str) -> dict:
-        return {
-            'user_id': user.id,
-            'token': hash_password(token)
-        }
+    def _update_token_status(self, token: Token, status: str) -> None:
+        self._crud_service.update(token, {'status': status})
