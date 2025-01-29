@@ -1,4 +1,4 @@
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user
 from werkzeug.exceptions import Unauthorized
 
 from app.constants import ValidationConstants
@@ -156,6 +156,10 @@ class AuthService:
             error_msg=ValidationConstants.ResetPassword.ERROR_MESSAGES['general_error'],
             email=email
         )
+
+    def update_password(self, data: dict) -> None:
+        verify_password(current_user.password, data['current_password'])
+        self._update_user_password(current_user, data['new_password'])
 
     def _update_user_password(self, user: User, password: str) -> None:
         self._crud_service.update(user, {'password': hash_password(password)})
