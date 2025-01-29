@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from app import db
 
 
@@ -13,3 +15,12 @@ class DatabaseService:
 
     def rollback(self) -> None:
         db.session.rollback()
+
+    @contextmanager
+    def transaction(self):
+        try:
+            yield
+            self.commit()
+        except Exception as err:
+            self.rollback()
+            raise err
