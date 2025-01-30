@@ -15,4 +15,13 @@ def create_app():
     login_manager.init_app(app)
     mail.init_app(app)
 
+    from app.routes import auth_bp
+
+    app.register_blueprint(auth_bp)
+
+    @login_manager.user_loader
+    def user_loader(user_id):
+        from app.models import User
+        return User.query.get(int(user_id))
+
     return app
