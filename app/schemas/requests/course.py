@@ -1,6 +1,6 @@
 from marshmallow import fields
 
-from app import ma
+from app.extensions import ma
 from app.models import Course
 from app.schemas import NameSchema
 

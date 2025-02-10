@@ -1,6 +1,6 @@
 from marshmallow import fields, validate
 
-from app import ma
+from app.extensions import ma
 from app.constants import ModelConstants
 from app.models import LoginRecord
 from app.utils import format_date, format_time

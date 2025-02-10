@@ -1,13 +1,13 @@
 from marshmallow import fields
 
-from app import ma
-from app.models import Student
+from app.extensions import ma
+from app.models import Teacher
 from app.schemas import PersonSchema
 
 
-class StudentSchema(PersonSchema, ma.SQLAlchemyAutoSchema):
+class TeacherSchema(PersonSchema, ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = Student
+        model = Teacher
         load_instance = True
         exclude = ('date', 'time')
 
@@ -18,13 +18,19 @@ class StudentSchema(PersonSchema, ma.SQLAlchemyAutoSchema):
         only=('name',)
     )
 
-    solutions = fields.Nested(
-        'StudentSolutionSchema',
+    lectures = fields.Nested(
+        'LectureSchema',
         many=True,
-        dump_only=True
+        dump_only=True,
+        only=('name', 'content')
     )
 
     courses_count = fields.Function(
         lambda obj: len(obj.courses),
+        dump_only=True
+    )
+
+    lectures_count = fields.Function(
+        lambda obj: len(obj.lectures),
         dump_only=True
     )

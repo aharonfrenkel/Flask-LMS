@@ -3,7 +3,7 @@ from datetime import datetime
 import pytz
 from marshmallow import fields, validate
 
-from app import ma
+from app.extensions import ma
 from app.models import Exercise
 from app.schemas import NameSchema
 

@@ -1,6 +1,6 @@
 from marshmallow import fields, validate
 
-from app import ma
+from app.extensions import ma
 from app.constants import ModelConstants
 from app.models import Token
 

@@ -1,6 +1,6 @@
 from marshmallow import fields, validate
 
-from app import ma
+from app.extensions import ma
 from app.constants import GeneralConstants
 from app.models import StudentSolution
 
