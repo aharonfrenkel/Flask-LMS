@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 
-from app import db
+from app.extensions import db
 from app.constants import ModelConstants, AuthConstants
 from app.models import BaseTable
 

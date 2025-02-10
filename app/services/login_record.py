@@ -25,4 +25,4 @@ class LoginRecordService:
             'ip_address': request.remote_addr,
             'user_agent': request.user_agent.string
         }
-        return self._crud_service.create(login_record_data , self._create_login_record_schema)
+        return self._crud_service.create(login_record_data, self._create_login_record_schema)

@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 import pytz
 
-from app import db
+from app.extensions import db
 from app.constants import ModelConstants, GeneralConstants
 from app.models import BaseTable
 

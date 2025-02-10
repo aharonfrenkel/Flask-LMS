@@ -119,8 +119,8 @@ class AuthService:
         user = self._user_service.find_by_email(data['email'])
 
         if user:
-            reseet_token = self._token_service.create_password_reset_token(user)
-            self._email_service.send_password_reset_token(user.email, reseet_token)
+            reset_token = self._token_service.create_password_reset_token(user)
+            self._email_service.send_password_reset_token(user.email, reset_token)
 
 
     # Reset password service

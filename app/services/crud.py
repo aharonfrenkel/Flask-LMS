@@ -3,7 +3,7 @@ from typing import Type, TypeVar, Optional
 from marshmallow import Schema
 from werkzeug.exceptions import NotFound, Conflict
 
-from app import db
+from app.extensions import db
 from app.services import DatabaseService
 
 T = TypeVar('T')

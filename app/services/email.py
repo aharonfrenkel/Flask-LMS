@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from flask_mail import Message
 
-from app import mail
+from app.extensions import mail
 from app.constants import GeneralConstants
 from config import Config
 

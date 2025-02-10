@@ -1,7 +1,7 @@
 from sqlalchemy.orm import declared_attr
 from sqlalchemy.sql import func
 
-from app import db
+from app.extensions import db
 from app.utils import camelcase_to_snakecase
 
 

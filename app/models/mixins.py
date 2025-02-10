@@ -1,6 +1,6 @@
 from sqlalchemy.orm import declared_attr
 
-from app import db
+from app.extensions import db
 from app.constants import ModelConstants
 from app.models import BaseTable
 
