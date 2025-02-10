@@ -9,50 +9,39 @@ Registration (UserRegisterSchema):
     - Password (required, strict validation)
     - Role (automatically set, defaults to student)
 
-Login (UserLoginSchema):
+Login (LoginRequestSchema):
     - Email (required)
     - Password (required, basic validation)
     - Remember me option (optional, defaults to False)
 
 Password Management:
-    - Forget Password (UserForgetPasswordSchema):
+    - Forget Password (ForgetPasswordRequestSchema):
         Only requires email to send reset token
-    - Reset Password (UserResetPasswordSchema):
+    - Reset Password (ResetPasswordRequestSchema):
         Requires email, reset token, and new password
-    - Change Password (UserChangePasswordSchema):
+    - Change Password (UpdatePasswordRequestSchema):
         Requires current password verification and new password
-
-Admin Management (UserAdminSchema):
-    - Full user data access
-    - Includes nested student/teacher data
-    - Used for administrative operations
 """
 
 from typing import Literal
 
 from marshmallow import validate, fields, Schema
 
-from app import ma
+from app.extensions import ma
 from app.constants import ValidationConstants, AuthConstants
 from app.models import User
-from app.schemas import BaseSchema
+
+
+__all__ = [
+    'UserRegisterSchema',
+    'LoginRequestSchema',
+    'ForgetPasswordRequestSchema',
+    'ResetPasswordRequestSchema',
+    'UpdatePasswordRequestSchema'
+]
 
 
 class BaseValidation:
-    """
-    Implements Factory Method pattern for generating marshmallow fields with consistent validation rules.
-
-    This class provides class methods that serve as factory methods for creating
-    pre-configured field instances. This pattern ensures:
-    - Consistent validation rules across the application
-    - DRY (Don't Repeat Yourself) by centralizing field configuration
-    - Flexibility through kwargs for customization when needed
-
-    Usage:
-        email = BaseValidation.get_email_fields()
-        password = BaseValidation.get_password_fields(validation_type='strict')
-    """
-
     @classmethod
     def get_email_fields(cls, **kwargs) -> fields.Email:
         base_config = {
@@ -68,7 +57,7 @@ class BaseValidation:
         return fields.Email(**{**base_config, **kwargs})
 
     @classmethod
-    def get_password_fields(cls, validation_type: Literal['strict', 'login'], **kwargs) -> fields.Str:
+    def get_password_fields(cls, validation_type: Literal['strict', 'lenient'], **kwargs) -> fields.Str:
         base_config = {'required': True}
 
         if validation_type == 'strict':
@@ -82,16 +71,16 @@ class BaseValidation:
                     error=ValidationConstants.Password.ERROR_MESSAGES['pattern']
                 )
             ]
-        elif validation_type == 'login':
+        else:
             base_config['validate'] = validate.Length(
                 min=1,
-                error="Password cannot be empty"
+                error="cannot be empty"
             )
 
         return fields.Str(**{**base_config, **kwargs})
 
 
-class UserBaseSchema(BaseSchema):
+class UserBaseSchema(Schema):
     email = BaseValidation.get_email_fields()
 
 
@@ -99,50 +88,29 @@ class UserRegisterSchema(ma.SQLAlchemyAutoSchema, UserBaseSchema):
     class Meta:
         model = User
         load_instance = True
-        exclude = ("created_at", "id")
+        exclude = ('id', 'created_at')
 
     password = BaseValidation.get_password_fields(validation_type='strict', load_only=True)
     role = fields.Str(
-        dump_only=True,
         validate=validate.OneOf(AuthConstants.Role.CHOICES),
-        default=AuthConstants.Role.STUDENT
+        missing=AuthConstants.Role.STUDENT
     )
 
 
-class UserLoginSchema(Schema):
-    email = BaseValidation.get_email_fields()
-    password = BaseValidation.get_password_fields(validation_type='login')
+class LoginRequestSchema(UserBaseSchema):
+    password = BaseValidation.get_password_fields(validation_type='lenient')
     remember = fields.Bool(missing=False)
 
 
-class UserForgetPasswordSchema(UserBaseSchema):
+class ForgetPasswordRequestSchema(UserBaseSchema):
     pass
 
 
-class UserResetPasswordSchema(UserBaseSchema):
-    token = fields.Str(
-        required=True,
-        validate=validate.Length(min=1, error="Token cannot be empty")
-    )
+class ResetPasswordRequestSchema(UserBaseSchema):
+    token = BaseValidation.get_password_fields(validation_type='lenient')
     new_password = BaseValidation.get_password_fields(validation_type='strict')
 
 
-class UserChangePasswordSchema(Schema):
-    current_password = BaseValidation.get_password_fields(validation_type='strict')
+class UpdatePasswordRequestSchema(Schema):
+    current_password = BaseValidation.get_password_fields(validation_type='lenient')
     new_password = BaseValidation.get_password_fields(validation_type='strict')
-
-
-class UserAdminSchema(ma.SQLAlchemyAutoSchema, BaseSchema):
-    class Meta:
-        model = User
-        load_instance = True
-        include_fk = True
-
-    email = BaseValidation.get_email_fields()
-    role = fields.Str(
-        required=True,
-        validate=validate.OneOf(AuthConstants.Role.CHOICES)
-    )
-
-    student = fields.Nested('StudentSchema', dump_only=True)
-    teacher = fields.Nested('TeacherSchema', dump_only=True)
