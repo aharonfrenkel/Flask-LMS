@@ -4,6 +4,13 @@ from app.constants import ModelConstants
 from app.extensions import bcrypt
 
 
+__all__ = [
+    'hash_password',
+    'verify_password',
+    'generate_token'
+]
+
+
 def hash_password(password: str) -> str:
     return bcrypt.generate_password_hash(password).decode('utf-8')
 
