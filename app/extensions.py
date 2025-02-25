@@ -1,3 +1,4 @@
+from flask_apispec import FlaskApiSpec
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
@@ -10,3 +11,4 @@ ma = Marshmallow()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 mail = Mail()
+docs = FlaskApiSpec(document_options=False)

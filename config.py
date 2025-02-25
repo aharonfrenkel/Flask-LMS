@@ -1,4 +1,8 @@
 import os
+
+from apispec import APISpec
+from apispec.ext.marshmallow import MarshmallowPlugin
+from apispec_webframeworks.flask import FlaskPlugin
 from dotenv import load_dotenv
 from datetime import timedelta
 
@@ -28,3 +32,16 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
+
+    # APISpec
+    APISPEC_SPEC = APISpec(
+        title='LMS API',
+        version='1.0.0',
+        openapi_version='3.0.2',
+        plugins=[FlaskPlugin(), MarshmallowPlugin()],
+        info={
+            'description': 'API endpoints for Learning Management System'
+        }
+    )
+    APISPEC_SWAGGER_URL = '/swagger/'
+    APISPEC_SWAGGER_UI_URL = '/swagger-ui/'

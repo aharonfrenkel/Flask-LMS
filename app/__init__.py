@@ -1,7 +1,7 @@
 from flask import Flask
 
 from config import Config
-from app.extensions import db, ma, login_manager, mail
+from app.extensions import db, ma, login_manager, mail, docs
 
 
 def create_app():
@@ -14,6 +14,8 @@ def create_app():
     ma.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
+    docs.init_app(app)
+
 
     from app.routes import auth_bp
 
