@@ -6,7 +6,7 @@ from app.factories import (
     user_login_schema,
     user_forgot_password_schema,
     user_reset_password_schema,
-    user_change_password_schema
+    user_update_password_schema, user_public_schema
 )
 from app.middleware import validate_json_request, handle_exceptions, logout_required
 from app.utils import success_response
@@ -22,13 +22,11 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 def login(data: dict) -> Response:
     user = auth_service.login_user(data)
 
-    user_data = {
-        'id': user.id,
-        'email': user.email,
-        'role': user.role
-    }
-
-    return success_response("Login successful", data=user_data)
+    return success_response(
+        "Login successful",
+        data=user,
+        schema=user_public_schema
+    )
 
 
 @auth_bp.post('/logout')
@@ -63,7 +61,7 @@ def reset_password(data: dict) -> Response:
 @auth_bp.post('/password/update')
 @handle_exceptions
 @login_required
-@validate_json_request(user_change_password_schema)
+@validate_json_request(user_update_password_schema)
 def update_password(data: dict) -> Response:
     auth_service.update_password(data)
 

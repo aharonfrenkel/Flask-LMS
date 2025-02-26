@@ -8,7 +8,8 @@ from app.schemas import (
     UserUpdatePasswordSchema,
     CourseWriteSchema,
     CourseReadSchema,
-    CourseAdminSchema
+    CourseAdminSchema,
+    UserPublicSchema
 )
 
 
@@ -17,6 +18,8 @@ user_login_schema = UserLoginSchema()
 user_forgot_password_schema = UserForgetPasswordSchema()
 user_reset_password_schema = UserResetPasswordSchema()
 user_update_password_schema = UserUpdatePasswordSchema()
+
+user_public_schema = UserPublicSchema()
 
 
 create_login_record_schema = LoginRecordSchema(only=('user_id', 'ip_address', 'user_agent'))
