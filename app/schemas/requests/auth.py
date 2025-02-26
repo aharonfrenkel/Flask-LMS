@@ -9,17 +9,17 @@ Registration (UserRegisterSchema):
     - Password (required, strict validation)
     - Role (automatically set, defaults to student)
 
-Login (LoginRequestSchema):
+Login (UserLoginSchema):
     - Email (required)
     - Password (required, basic validation)
     - Remember me option (optional, defaults to False)
 
 Password Management:
-    - Forget Password (ForgetPasswordRequestSchema):
+    - Forget Password (UserForgetPasswordSchema):
         Only requires email to send reset token
     - Reset Password (ResetPasswordRequestSchema):
         Requires email, reset token, and new password
-    - Change Password (UpdatePasswordRequestSchema):
+    - Change Password (UserUpdatePasswordSchema):
         Requires current password verification and new password
 """
 
@@ -34,10 +34,10 @@ from app.models import User
 
 __all__ = [
     'UserRegisterSchema',
-    'LoginRequestSchema',
-    'ForgetPasswordRequestSchema',
-    'ResetPasswordRequestSchema',
-    'UpdatePasswordRequestSchema'
+    'UserLoginSchema',
+    'UserForgetPasswordSchema',
+    'UserResetPasswordSchema',
+    'UserUpdatePasswordSchema'
 ]
 
 
@@ -97,20 +97,20 @@ class UserRegisterSchema(ma.SQLAlchemyAutoSchema, UserBaseSchema):
     )
 
 
-class LoginRequestSchema(UserBaseSchema):
+class UserLoginSchema(UserBaseSchema):
     password = BaseValidation.get_password_fields(validation_type='lenient')
     remember = fields.Bool(missing=False)
 
 
-class ForgetPasswordRequestSchema(UserBaseSchema):
+class UserForgetPasswordSchema(UserBaseSchema):
     pass
 
 
-class ResetPasswordRequestSchema(UserBaseSchema):
+class UserResetPasswordSchema(UserBaseSchema):
     token = BaseValidation.get_password_fields(validation_type='lenient')
     new_password = BaseValidation.get_password_fields(validation_type='strict')
 
 
-class UpdatePasswordRequestSchema(Schema):
+class UserUpdatePasswordSchema(Schema):
     current_password = BaseValidation.get_password_fields(validation_type='lenient')
     new_password = BaseValidation.get_password_fields(validation_type='strict')
