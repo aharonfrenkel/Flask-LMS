@@ -5,8 +5,8 @@ from app.services.login_record import LoginRecordService
 from app.services.token import TokenService
 from app.services.email import EmailService
 from app.services.user import UserService
-from .schema_factories import create_login_record_schema, user_register_schema, create_token_schema
-
+from app.services.course import CourseService
+from .schema_factories import create_login_record_schema, user_register_schema, create_token_schema, course_write_schema
 
 db_service = DatabaseService()
 crud_service = CRUDService(db_service)
@@ -23,3 +23,4 @@ auth_service = AuthService(
     email_service,
     user_register_schema
 )
+course_service = CourseService(crud_service, course_write_schema)
