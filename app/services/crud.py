@@ -18,6 +18,9 @@ class CRUDService:
         self._db_service = db_service
 
     # Read operations
+    def find_all(self, model: Type[T]) -> list[T]:
+        return model.query.all()
+
     def find_one_by_fields(self, model: Type[T], **filters) -> Optional[T]:
         return model.query.filter_by(**filters).first()
 
@@ -62,4 +65,9 @@ class CRUDService:
         for key, value in data.items():
             if hasattr(obj, key):
                 setattr(obj, key, value)
+        self._db_service.commit()
+
+    # Delete operations
+    def delete(self, obj: T) -> None:
+        db.session.delete(obj)
         self._db_service.commit()
