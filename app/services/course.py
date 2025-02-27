@@ -113,7 +113,7 @@ class CourseService:
         course = self._get_course_by_name_or_404(course_name)
         if 'name' in data and course.name != data['name']:
             self._verify_course_name_available(data['name'])
-            self._crud_service.update(course, data)
+            self._crud_service.update(course, **data)
         return course
 
 

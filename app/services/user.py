@@ -1,7 +1,8 @@
-from typing import Optional, Type
+from typing import Optional, Type, List
 
+from flask_login import current_user
 
-from app.models import User
+from app.models import User, LoginRecord
 from app.services import CRUDService
 from app.utils import hash_password
 
@@ -51,5 +52,5 @@ class UserService:
     def update_user_password(self, user: User, password: str) -> None:
         self._crud_service.update(
             user,
-            {'password': hash_password(password)}
+            password=hash_password(password)
         )

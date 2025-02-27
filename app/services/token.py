@@ -82,4 +82,4 @@ class TokenService:
         )
 
     def _update_token_status(self, token: Token, status: str) -> None:
-        self._crud_service.update(token, {'status': status})
+        self._crud_service.update(token, status=status)

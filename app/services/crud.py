@@ -61,8 +61,8 @@ class CRUDService:
         return new_item
 
     # Update operations
-    def update(self, obj: T, data: dict) -> None:
-        for key, value in data.items():
+    def update(self, obj: T, **filters) -> None:
+        for key, value in filters.items():
             if hasattr(obj, key):
                 setattr(obj, key, value)
         self._db_service.commit()
