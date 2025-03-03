@@ -6,3 +6,4 @@ from .email import EmailService
 from .user import UserService
 from .auth import AuthService
 from .course import CourseService
+from .lecture import LectureService
